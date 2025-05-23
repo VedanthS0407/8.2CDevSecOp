@@ -22,7 +22,7 @@ pipeline {
         emailext(
           subject: "Test Stage Status: ${currentBuild.currentResult}",
           body: "Test stage result: ${currentBuild.currentResult}",
-          to: 'vedanthsuddula3@gmail.com',
+          to: 'vedanthsuddula@gmail.com',
           attachLog: true
         )
       }
