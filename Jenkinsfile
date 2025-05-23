@@ -1,11 +1,6 @@
 pipeline {
   agent any
 
-  environment {
-    PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
-    SHELL = "/bin/bash"
-  }
-
   stages {
     stage('Checkout') {
       steps {
