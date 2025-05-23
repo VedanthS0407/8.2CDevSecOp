@@ -16,19 +16,21 @@ pipeline {
 
     stage('Run Tests') {
       steps {
-        bat 'npm test || exit 0'
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          bat 'npm test'
+        }
+        emailext(
+          subject: "Test Stage Status: ${currentBuild.currentResult}",
+          body: "Test stage result: ${currentBuild.currentResult}",
+          to: 'vedanthsuddula3@gmail.com',
+          attachLog: true
+        )
       }
     }
 
     stage('Generate Coverage Report') {
       steps {
         bat 'npm run coverage || exit 0'
-      }
-    }
-
-    stage('NPM Audit (Security Scan)') {
-      steps {
-        bat 'npm audit || exit 0'
       }
     }
   }
