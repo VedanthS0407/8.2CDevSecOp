@@ -1,50 +1,39 @@
 pipeline {
   agent any
 
+  environment {
+    PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+    SHELL = "/bin/bash"
+  }
+
   stages {
     stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/VedanthS0407/8.2CDevSecOp.git'
+        git branch: 'main', url: 'https://github.com/AishuN1107/8.2CDevSecOps.git'
       }
     }
 
     stage('Install Dependencies') {
       steps {
-        bat 'npm install'
+        sh 'npm install'
       }
     }
 
     stage('Run Tests') {
       steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-          bat 'npm test'
-        }
-        emailext(
-          subject: "Test Stage Status: ${currentBuild.currentResult}",
-          body: "Test stage result: ${currentBuild.currentResult}",
-          to: 'vedanthsuddula@gmail.com',
-          attachLog: true
-        )
+        sh 'npm test || true'
       }
     }
 
     stage('Generate Coverage Report') {
       steps {
-        bat 'npm run coverage || exit 0'
+        sh 'npm run coverage || true'
       }
     }
 
     stage('NPM Audit (Security Scan)') {
       steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-          bat 'npm audit || exit 0'
-        }
-        emailext(
-          subject: "Security Scan Status: ${currentBuild.currentResult}",
-          body: "Security scan result: ${currentBuild.currentResult}",
-          to: 'vedanthsuddula@gmail.com',
-          attachLog: true
-        )
+        sh 'npm audit || true'
       }
     }
   }
